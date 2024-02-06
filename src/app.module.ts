@@ -19,6 +19,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { EncryptionsModule } from './modules/encryptions/encryptions.module';
+import { AiToolListModule } from './modules/ai-tool-list/ai-tool-list.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { EncryptionsModule } from './modules/encryptions/encryptions.module';
     EncryptionsModule,
     AiChatModule,
     ChatModule,
+    AiToolListModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
