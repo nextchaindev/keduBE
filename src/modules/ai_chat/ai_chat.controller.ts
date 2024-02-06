@@ -34,6 +34,7 @@ import { VitoService } from './ai-services/Vito';
 import { IndexParamsDto } from './dto/provider.param';
 import { CreateMessageAIChatDto } from './dto/send-message.dto';
 
+@IsPublicEndpoint()
 @Controller('ai-chat/:providerName')
 export class AiChatController {
   public serviceMaps = {
@@ -80,7 +81,6 @@ export class AiChatController {
     private readonly papagoTranslationService: PapagoTranslationService,
   ) {}
 
-  @IsPublicEndpoint()
   @Post('/send-message')
   @UseInterceptors(FileInterceptor('attachFile'))
   async sendMessage(
