@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
 import { NO_RESPONSE_FROM_AI } from '@/commons/const';
+import { user_role } from '@/commons/role';
 import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
 import { ChatService } from '@/modules/chat/chat.service';
@@ -80,6 +81,7 @@ export class SpeechRecognitionService extends CommonAIServices {
       await this.aiChatService.saveMessage({
         room_id: payload.room_id,
         text: NO_RESPONSE_FROM_AI,
+        role: user_role.BOT,
       });
 
       throw new Error('No recognized from AI');
@@ -88,6 +90,7 @@ export class SpeechRecognitionService extends CommonAIServices {
     return await this.aiChatService.saveMessage({
       room_id: payload.room_id,
       text: transcription.recognized,
+      role: user_role.BOT,
     });
   }
 

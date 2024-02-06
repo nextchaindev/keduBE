@@ -4,6 +4,7 @@ import FormData from 'form-data';
 import path from 'path';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { user_role } from '@/commons/role';
 import { MessageModel } from '@/models/message.model';
 import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
@@ -109,6 +110,7 @@ export class PapagoTranslationService extends CommonAIServices {
     return await this.aiChatService.saveMessage({
       room_id: payload.room_id,
       attach_url: translateResult,
+      role: user_role.BOT,
     });
   }
 }

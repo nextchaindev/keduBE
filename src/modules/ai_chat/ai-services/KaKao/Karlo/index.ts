@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { user_role } from '@/commons/role';
 import { MessageModel } from '@/models/message.model';
 import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
@@ -65,6 +66,7 @@ export class KarloService extends CommonAIServices {
       room_id: payload.room_id,
       text: payload.text,
       attach_url: JSON.stringify(result),
+      role: user_role.BOT,
     });
 
     return result;

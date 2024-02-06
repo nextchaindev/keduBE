@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { user_role } from '@/commons/role';
 import { MessageModel } from '@/models/message.model';
 import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
@@ -101,6 +102,7 @@ export class SceneSegmentationService extends CommonAIServices {
       room_id: payload.room_id,
       text: JSON.stringify(responseText.result),
       attach_url: attachUrl,
+      role: user_role.BOT,
     });
   }
 }

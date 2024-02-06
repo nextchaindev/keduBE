@@ -65,11 +65,11 @@ export class AiChatService {
       order: { created_at: 'ASC' },
     });
 
-    const userMessage = messages.map((message, index) => {
+    const userMessage = messages.map((message) => {
       return {
         ...message,
         user: {
-          role: index % 2 === 0 ? 'user' : 'bot',
+          role: message.role,
         },
       };
     });
