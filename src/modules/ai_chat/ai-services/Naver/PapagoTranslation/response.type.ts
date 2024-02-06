@@ -20,6 +20,10 @@ export class CreateMessagePapagoTranslationDto {
   @ApiPropertyOptional({ type: String })
   @JoiSchema(Joi.string().required())
   target_code: string;
+
+  @ApiPropertyOptional({ type: String })
+  @JoiSchema(Joi.optional())
+  config?: string;
 }
 
 export type DocTransUpload = {

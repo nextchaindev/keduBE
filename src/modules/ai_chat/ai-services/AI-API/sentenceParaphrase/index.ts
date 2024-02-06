@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { MessageModel } from '@/models/message.model';
+import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
 import { CreateMessageAIChatDto } from '@/modules/ai_chat/dto/send-message.dto';
 import { ChatService } from '@/modules/chat/chat.service';
@@ -9,6 +11,8 @@ import { ChatService } from '@/modules/chat/chat.service';
 @Injectable()
 export class SentenceParaphraseService extends CommonAIServices {
   constructor(
+    protected readonly messageModel: MessageModel,
+    protected readonly roomModel: RoomModel,
     protected readonly chatService: ChatService,
     protected readonly aiChatService: AiChatService,
   ) {
@@ -55,8 +59,11 @@ export class SentenceParaphraseService extends CommonAIServices {
       payload.sentence2,
     )) as any;
 
-    return {
+    await this.aiChatService.saveMessage(payload);
+
+    return await this.aiChatService.saveMessage({
+      room_id: payload.room_id,
       text: responseText.result,
-    };
+    });
   }
 }

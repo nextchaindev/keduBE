@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { NO_RESPONSE_FROM_AI } from '@/commons/const';
+import { MessageModel } from '@/models/message.model';
+import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
 import { ChatService } from '@/modules/chat/chat.service';
 import { CreateMessageDto } from '@/modules/chat/dto/send-message.dto';
@@ -9,6 +12,8 @@ import { CreateMessageDto } from '@/modules/chat/dto/send-message.dto';
 @Injectable()
 export class LegalQAService extends CommonAIServices {
   constructor(
+    protected readonly messageModel: MessageModel,
+    protected readonly roomModel: RoomModel,
     protected readonly chatService: ChatService,
     protected readonly aiChatService: AiChatService,
   ) {
@@ -38,9 +43,6 @@ export class LegalQAService extends CommonAIServices {
     );
 
     const { return_object } = response.data;
-    if (!return_object.LegalInfo.AnswerInfo.length)
-      throw new Error('No recognized from AI');
-
     return return_object;
   }
 
@@ -49,8 +51,27 @@ export class LegalQAService extends CommonAIServices {
 
     const responseText = (await this.getAnswer(payload.text)) as any;
 
-    return {
+    await this.aiChatService.saveMessage(payload);
+
+    if (!responseText.LegalInfo.AnswerInfo.length) {
+      await this.aiChatService.saveMessage({
+        room_id: payload.room_id,
+        text: JSON.stringify([
+          {
+            answer: NO_RESPONSE_FROM_AI,
+            score: '',
+            source: '',
+            clause: '',
+          },
+        ]),
+      });
+
+      throw new Error('No recognized from AI');
+    }
+
+    return await this.aiChatService.saveMessage({
+      room_id: payload.room_id,
       text: JSON.stringify(responseText.LegalInfo.AnswerInfo),
-    };
+    });
   }
 }

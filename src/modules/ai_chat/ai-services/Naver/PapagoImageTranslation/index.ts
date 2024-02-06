@@ -3,6 +3,8 @@ import axios from 'axios';
 import FormData from 'form-data';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { MessageModel } from '@/models/message.model';
+import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
 import { CreateMessageAIChatDto } from '@/modules/ai_chat/dto/send-message.dto';
 import { ChatService } from '@/modules/chat/chat.service';
@@ -13,14 +15,17 @@ import { PapagoImageToImage } from './response.type';
 @Injectable()
 export class PapagoImageTranslationService extends CommonAIServices {
   constructor(
+    protected readonly messageModel: MessageModel,
+    protected readonly roomModel: RoomModel,
     protected readonly chatService: ChatService,
     protected readonly aiChatService: AiChatService,
-    protected readonly cloudinary: CloudinaryService,
+    private cloudinary: CloudinaryService,
   ) {
     super(aiChatService);
 
     this.serviceURL =
       'https://naveropenapi.apigw.ntruss.com/image-to-image/v1/translate';
+
     this.init('PapagoImageTranslation');
   }
 
@@ -53,6 +58,12 @@ export class PapagoImageTranslationService extends CommonAIServices {
     if (!payload.source_code || !payload.target_code)
       throw new Error('Language code is required');
 
+    const attachUrl = await this.cloudinary
+      .uploadImageFile(attachFile)
+      .then((res) => res.secure_url);
+
+    payload.attach_url = attachUrl;
+
     const responseText = (await this.getAnswer(
       payload.source_code,
       payload.target_code,
@@ -65,10 +76,13 @@ export class PapagoImageTranslationService extends CommonAIServices {
       )
       .then((res) => res.secure_url);
 
-    return {
+    await this.aiChatService.saveMessage(payload);
+
+    return await this.aiChatService.saveMessage({
+      room_id: payload.room_id,
       text: responseText.data.targetText,
       attach_url: imageUrl,
-    };
+    });
   }
 
   async getLanguageCode() {

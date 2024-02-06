@@ -2,9 +2,12 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { MessageModel } from '@/models/message.model';
+import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
 import { ChatService } from '@/modules/chat/chat.service';
 import { CreateMessageDto } from '@/modules/chat/dto/send-message.dto';
+import { CloudinaryService } from '@/modules/cloudinary/cloudinary.service';
 
 import {
   SceneSegmentStatusResponse,
@@ -14,8 +17,11 @@ import {
 @Injectable()
 export class SceneSegmentationService extends CommonAIServices {
   constructor(
+    protected readonly messageModel: MessageModel,
+    protected readonly roomModel: RoomModel,
     protected readonly chatService: ChatService,
     protected readonly aiChatService: AiChatService,
+    private cloudinary: CloudinaryService,
   ) {
     super(aiChatService);
 
@@ -24,9 +30,11 @@ export class SceneSegmentationService extends CommonAIServices {
   }
 
   private async uploadToAiServer(
-    file: Express.Multer.File,
+    videoFilePath: string,
   ): Promise<SceneSegmentUploadResponse> {
-    const videoData = file.buffer;
+    const response = await fetch(videoFilePath);
+
+    const videoData = await response.arrayBuffer();
     const videoBlob = new Blob([videoData], { type: 'video/mp4' });
 
     const requestJson = {
@@ -73,14 +81,26 @@ export class SceneSegmentationService extends CommonAIServices {
     payload: CreateMessageDto,
     attachFile?: Express.Multer.File,
   ): Promise<any> {
-    const videoFileUpload = await this.uploadToAiServer(attachFile);
+    const attachUrl = attachFile
+      ? await this.cloudinary
+          .uploadFile(attachFile)
+          .then((res) => res.secure_url)
+      : payload.attach_url;
+
+    payload.attach_url = attachUrl;
+
+    const videoFileUpload = await this.uploadToAiServer(attachUrl);
 
     const responseText = await this.getAnswer(
       videoFileUpload.return_object.file_id,
     );
 
-    return {
+    await this.aiChatService.saveMessage(payload);
+
+    return await this.aiChatService.saveMessage({
+      room_id: payload.room_id,
       text: JSON.stringify(responseText.result),
-    };
+      attach_url: attachUrl,
+    });
   }
 }

@@ -115,4 +115,8 @@ export class CreateMessageClovaDto {
   @ApiPropertyOptional({ type: String })
   @JoiSchema(Joi.string().optional().default('0').valid(0, 1, 2))
   emotion_strength: string;
+
+  @ApiPropertyOptional({ type: String })
+  @JoiSchema(Joi.optional())
+  config?: string;
 }

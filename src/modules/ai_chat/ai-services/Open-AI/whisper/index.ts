@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { MessageModel } from '@/models/message.model';
+import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
 import { ChatService } from '@/modules/chat/chat.service';
 import { CloudinaryService } from '@/modules/cloudinary/cloudinary.service';
@@ -11,6 +13,8 @@ import { CreateMessageWhisperDto, languageCode } from './response.type';
 @Injectable()
 export class WhisperService extends CommonAIServices {
   constructor(
+    protected readonly messageModel: MessageModel,
+    protected readonly roomModel: RoomModel,
     protected readonly chatService: ChatService,
     protected readonly aiChatService: AiChatService,
     private cloudinary: CloudinaryService,
@@ -46,9 +50,12 @@ export class WhisperService extends CommonAIServices {
       language: payload.language_code,
     });
 
-    return {
+    await this.aiChatService.saveMessage(payload);
+
+    return await this.aiChatService.saveMessage({
+      room_id: payload.room_id,
       text: transcription.text,
-    };
+    });
   }
 
   async getLanguageCode() {

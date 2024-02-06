@@ -4,6 +4,8 @@ import FormData from 'form-data';
 import path from 'path';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { MessageModel } from '@/models/message.model';
+import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
 import { ChatService } from '@/modules/chat/chat.service';
 import { CloudinaryService } from '@/modules/cloudinary/cloudinary.service';
@@ -16,6 +18,8 @@ import {
 @Injectable()
 export class PapagoTranslationService extends CommonAIServices {
   constructor(
+    protected readonly messageModel: MessageModel,
+    protected readonly roomModel: RoomModel,
     protected readonly chatService: ChatService,
     protected readonly aiChatService: AiChatService,
     private cloudinary: CloudinaryService,
@@ -100,8 +104,11 @@ export class PapagoTranslationService extends CommonAIServices {
       )
       .then((res) => res.secure_url);
 
-    return {
+    await this.aiChatService.saveMessage(payload);
+
+    return await this.aiChatService.saveMessage({
+      room_id: payload.room_id,
       attach_url: translateResult,
-    };
+    });
   }
 }
