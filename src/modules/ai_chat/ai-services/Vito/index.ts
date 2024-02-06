@@ -4,6 +4,7 @@ import FormData from 'form-data';
 import streamifier from 'streamifier';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { user_role } from '@/commons/role';
 import { MessageModel } from '@/models/message.model';
 import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
@@ -125,6 +126,7 @@ export class VitoService extends CommonAIServices {
     return await this.aiChatService.saveMessage({
       room_id: payload.room_id,
       text: JSON.stringify(transcription.results.utterances),
+      role: user_role.BOT,
     });
   }
 }

@@ -1,6 +1,8 @@
 import { CommonEntity } from 'src/commons/entities';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
+import { user_role } from '@/commons/role';
+
 import { Room } from './room.entity';
 
 @Entity({ name: 'message', schema: process.env.POSTGRES_SCHEMA })
@@ -29,4 +31,13 @@ export class Message extends CommonEntity {
 
   @Column({ name: 'config', type: 'varchar', nullable: true })
   config?: string;
+
+  @Column({
+    name: 'user_id',
+    type: 'uuid',
+    nullable: true,
+    enum: user_role,
+    default: user_role.USER,
+  })
+  role: user_role;
 }

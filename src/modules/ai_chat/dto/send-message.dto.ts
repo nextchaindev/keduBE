@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import Joi from 'joi';
 import { JoiSchema, JoiSchemaOptions } from 'nestjs-joi';
+import { user_role } from 'src/commons/role';
 import { JOI_DEFAULT_VALIDATION_OPTIONS } from 'src/commons/validations';
 
 const language_code_naver = [
@@ -60,4 +61,8 @@ export class CreateMessageAIChatDto {
   @ApiPropertyOptional({ type: String, required: false })
   @JoiSchema(Joi.string().max(256).optional())
   sentence2?: string;
+
+  @ApiPropertyOptional({ type: String, required: false })
+  @JoiSchema(Joi.string().valid(user_role))
+  role?: user_role;
 }
