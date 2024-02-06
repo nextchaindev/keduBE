@@ -1,6 +1,8 @@
 import { CommonEntity } from 'src/commons/entities';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
+import { Room } from './room.entity';
+
 @Entity({ name: 'ai_tool', schema: process.env.POSTGRES_SCHEMA })
 export class AITool extends CommonEntity {
   @Column({
@@ -83,4 +85,9 @@ export class AITool extends CommonEntity {
   @ManyToOne(() => AITool, (e) => e.children)
   @JoinColumn({ name: 'ai_parent_id', referencedColumnName: 'id' })
   parent?: AITool;
+
+  @OneToMany(() => Room, (e) => e.aiTool, {
+    cascade: true,
+  })
+  rooms: Room[];
 }

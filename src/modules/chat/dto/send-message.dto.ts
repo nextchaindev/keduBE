@@ -5,6 +5,10 @@ import { JOI_DEFAULT_VALIDATION_OPTIONS } from 'src/commons/validations';
 
 @JoiSchemaOptions(JOI_DEFAULT_VALIDATION_OPTIONS)
 export class CreateMessageDto {
+  @ApiPropertyOptional({ type: String })
+  @JoiSchema(Joi.string().guid().required())
+  room_id: string;
+
   @ApiPropertyOptional({ type: String, required: false })
   @JoiSchema(Joi.string().max(256).optional())
   @ApiPropertyOptional({ type: String, required: false })
