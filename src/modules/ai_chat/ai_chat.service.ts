@@ -5,6 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 
+import { user_role } from '@/commons/role';
 import { AIToolModel } from '@/models/ai_tool.model';
 import { AITool } from '@/models/entities/ai_tool.entity';
 import { MessageModel } from '@/models/message.model';
@@ -93,6 +94,7 @@ export class AiChatService {
       language_code: payload.language_code,
       sentence1: payload.sentence1,
       sentence2: payload.sentence2,
+      role: payload.role || user_role.USER,
     });
   }
 }

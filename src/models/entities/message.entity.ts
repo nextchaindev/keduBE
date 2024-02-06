@@ -33,8 +33,8 @@ export class Message extends CommonEntity {
   config?: string;
 
   @Column({
-    name: 'user_id',
-    type: 'uuid',
+    name: 'role',
+    type: 'enum',
     nullable: true,
     enum: user_role,
     default: user_role.USER,
