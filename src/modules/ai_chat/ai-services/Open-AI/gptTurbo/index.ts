@@ -22,7 +22,12 @@ export class OpenAIService extends CommonAIServices {
     if (!this.model) this.model = new OpenAI({ apiKey: this.apiKey });
 
     const completion = await this.model.chat.completions.create({
-      messages: payload.text,
+      messages: [
+        {
+          content: payload.text,
+          role: 'user',
+        },
+      ],
       model: 'gpt-3.5-turbo',
     });
 

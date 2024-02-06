@@ -11,13 +11,9 @@ export class CloudinaryService {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: 'KEDU_EDU',
+          folder: 'kedu',
           resource_type: 'auto',
           format: path.extname(file.originalname).split('.').pop(),
-          public_id: path.basename(
-            file.originalname,
-            path.extname(file.originalname),
-          ),
           unique_filename: true,
         },
         (error, result: UploadApiResponse) => {
@@ -32,7 +28,7 @@ export class CloudinaryService {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: 'KEDU_EDU',
+          folder: 'kedu',
           allowed_formats: ['jpg', 'png', 'jpeg'],
           resource_type: 'auto',
         },
@@ -48,7 +44,7 @@ export class CloudinaryService {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: 'KEDU_EDU',
+          folder: 'kedu',
           resource_type: 'auto',
         },
         (error, result: UploadApiResponse) => {
@@ -66,7 +62,7 @@ export class CloudinaryService {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: 'KEDU_EDU',
+          folder: 'kedu',
           resource_type: 'auto',
           format,
           use_filename: true,
