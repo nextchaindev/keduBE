@@ -65,7 +65,16 @@ export class AiChatService {
       order: { created_at: 'ASC' },
     });
 
-    return messages;
+    const userMessage = messages.map((message, index) => {
+      return {
+        ...message,
+        user: {
+          role: index % 2 === 0 ? 'user' : 'bot',
+        },
+      };
+    });
+
+    return userMessage;
   }
 
   public async saveMessage(payload: CreateMessageAIChatDto): Promise<any> {
