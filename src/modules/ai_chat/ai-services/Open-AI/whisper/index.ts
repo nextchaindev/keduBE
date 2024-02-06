@@ -25,8 +25,16 @@ export class WhisperService extends CommonAIServices {
   ): Promise<any> {
     if (!this.model) this.model = new OpenAI({ apiKey: this.apiKey });
 
+    const attachUrl = attachFile
+      ? await this.cloudinary
+          .uploadFile(attachFile)
+          .then((res) => res.secure_url)
+      : payload.attach_url;
+
+    payload.attach_url = attachUrl;
+
     const FileLike = {
-      url: attachFile,
+      url: attachUrl,
       async blob() {
         return await fetch(this.url).then((r) => r.blob());
       },

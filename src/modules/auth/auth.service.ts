@@ -35,8 +35,6 @@ export class AuthService {
       username: payload.username,
     });
 
-    console.log(payload);
-
     const createResult = await this.userModel.repository.save(user);
 
     if (!createResult.id || !createResult.role) throw new NotFoundException();
