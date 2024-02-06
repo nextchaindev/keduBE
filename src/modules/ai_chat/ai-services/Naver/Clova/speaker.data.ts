@@ -276,7 +276,7 @@ export const speaker = [
     display_name_ko: '신우',
     display_name_ja: 'シンウ',
     display_name_en: 'Shinwoo',
-    gender: 'F',
+    gender: 'M',
     lang: 'ko',
     age_group: 'youth',
     default_text: {

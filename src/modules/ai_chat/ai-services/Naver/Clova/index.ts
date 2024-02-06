@@ -3,6 +3,8 @@ import axios from 'axios';
 import FormData from 'form-data';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { MessageModel } from '@/models/message.model';
+import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
 import { ChatService } from '@/modules/chat/chat.service';
 import { CloudinaryService } from '@/modules/cloudinary/cloudinary.service';
@@ -13,6 +15,8 @@ import { speaker } from './speaker.data';
 @Injectable()
 export class ClovaService extends CommonAIServices {
   constructor(
+    protected readonly messageModel: MessageModel,
+    protected readonly roomModel: RoomModel,
     protected readonly chatService: ChatService,
     protected readonly aiChatService: AiChatService,
     private cloudinary: CloudinaryService,
@@ -28,15 +32,15 @@ export class ClovaService extends CommonAIServices {
   private async getSpeech(payload: CreateMessageClovaDto): Promise<string> {
     const formData = new FormData();
 
-    formData.append('speaker', payload.speaker || 'mijin');
-    formData.append('speed', payload.speed || 0);
-    formData.append('alpha', payload.alpha || 0);
+    formData.append('speaker', payload.speaker);
+    formData.append('speed', payload.speed);
+    formData.append('alpha', payload.alpha);
     formData.append('text', payload.text);
     formData.append('volume', payload.volume || 0);
-    formData.append('pitch', payload.pitch || 0);
-    formData.append('end-pitch', payload.end_pitch || 0);
-    formData.append('emotion', payload.emotion || 0);
-    formData.append('emotion-strength', payload.emotion_strength || 0);
+    formData.append('pitch', payload.pitch);
+    formData.append('end-pitch', payload.end_pitch);
+    formData.append('emotion', payload.emotion);
+    formData.append('emotion-strength', payload.emotion_strength);
     formData.append('format', 'mp3');
 
     const response = await axios.post(this.serviceURL, formData, {
@@ -63,9 +67,12 @@ export class ClovaService extends CommonAIServices {
       .uploadBase64ImageFile('data:audio/mp3;base64,' + responseText)
       .then((res) => res.secure_url);
 
-    return {
+    await this.aiChatService.saveMessage(payload);
+
+    return await this.aiChatService.saveMessage({
+      room_id: payload.room_id,
       attach_url: audioUrl,
-    };
+    });
   }
 
   async getSpeaker() {

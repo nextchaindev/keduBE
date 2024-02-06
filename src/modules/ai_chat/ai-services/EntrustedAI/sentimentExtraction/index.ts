@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
+import { NO_RESPONSE_FROM_AI } from '@/commons/const';
+import { MessageModel } from '@/models/message.model';
+import { RoomModel } from '@/models/room.model';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
 import { ChatService } from '@/modules/chat/chat.service';
 import { CreateMessageDto } from '@/modules/chat/dto/send-message.dto';
@@ -11,6 +14,8 @@ import { SentimentExtractionResponse } from './response.type';
 @Injectable()
 export class SentimentExtractionService extends CommonAIServices {
   constructor(
+    protected readonly messageModel: MessageModel,
+    protected readonly roomModel: RoomModel,
     protected readonly chatService: ChatService,
     protected readonly aiChatService: AiChatService,
   ) {
@@ -43,12 +48,27 @@ export class SentimentExtractionService extends CommonAIServices {
     if (!payload.text) throw new Error('Text is required');
 
     const keywordExtract = (await this.getExtraction(payload.text)) as any;
+    await this.aiChatService.saveMessage(payload);
+
     if (!keywordExtract.result.data || !keywordExtract.result.data.length) {
-      throw new Error('No result from AI (SentimentExtraction)');
+      await this.aiChatService.saveMessage({
+        room_id: payload.room_id,
+        text: JSON.stringify([
+          {
+            category: '',
+            end_offset: '',
+            start_offset: '',
+            text: NO_RESPONSE_FROM_AI,
+          },
+        ]),
+      });
+
+      throw new Error('No recognized from AI');
     }
 
-    return {
+    return await this.aiChatService.saveMessage({
+      room_id: payload.room_id,
       text: JSON.stringify(keywordExtract.result.data),
-    };
+    });
   }
 }

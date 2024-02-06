@@ -91,4 +91,8 @@ export class CreateMessageSpeechRecognitionDto {
   @ApiPropertyOptional({ type: String, required: false })
   @JoiSchema(Joi.string().optional())
   attach_url?: string;
+
+  @ApiPropertyOptional({ type: String })
+  @JoiSchema(Joi.optional())
+  config?: string;
 }
