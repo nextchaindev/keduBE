@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
+import { ChatCompletionMessageParam } from 'openai/resources';
 
 import { CommonAIServices } from '@/commons/ai-services/common-ai-services';
 import { AiChatService } from '@/modules/ai_chat/ai_chat.service';
@@ -20,21 +21,27 @@ export class OpenAIService extends CommonAIServices {
 
   async sendMessage(payload: CreateMessageDto) {
     if (!this.model) this.model = new OpenAI({ apiKey: this.apiKey });
+    await this.aiChatService.saveMessage(payload);
+
+    const oldMessages = await this.aiChatService.getMessages(payload.room_id);
+
+    const messages = oldMessages
+      .map((message, index) => ({
+        role: index % 2 === 0 ? 'user' : 'assistant',
+        content: message?.text || '',
+      }))
+      .splice(-10) as Array<ChatCompletionMessageParam>;
 
     const completion = await this.model.chat.completions.create({
-      messages: [
-        {
-          content: payload.text,
-          role: 'user',
-        },
-      ],
+      messages: messages,
       model: 'gpt-3.5-turbo',
     });
 
     const replyMsg = completion.choices[0].message.content as string;
 
-    return {
+    return await this.aiChatService.saveMessage({
+      room_id: payload.room_id,
       text: replyMsg,
-    };
+    });
   }
 }

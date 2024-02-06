@@ -21,6 +21,10 @@ const language_code_naver = [
 
 @JoiSchemaOptions(JOI_DEFAULT_VALIDATION_OPTIONS)
 export class CreateMessageAIChatDto {
+  @ApiPropertyOptional({ type: String })
+  @JoiSchema(Joi.string().guid().required())
+  room_id: string;
+
   @ApiPropertyOptional({ type: String, required: false })
   @JoiSchema(Joi.string().max(1000).optional())
   text?: string;

@@ -69,6 +69,10 @@ export const languageCode = [
 
 @JoiSchemaOptions(JOI_DEFAULT_VALIDATION_OPTIONS)
 export class CreateMessageSpeechRecognitionDto {
+  @ApiPropertyOptional({ type: String })
+  @JoiSchema(Joi.string().guid().required())
+  room_id: string;
+
   @ApiPropertyOptional({ type: String, required: false })
   @JoiSchema(
     Joi.string()

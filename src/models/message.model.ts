@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CommonModel } from 'src/commons/common.model';
 import { Repository } from 'typeorm';
 
-import { User } from './entities/user.entity';
+import { Message } from './entities/message.entity';
 
 @Injectable()
-export class UserModel extends CommonModel {
+export class MessageModel extends CommonModel {
   constructor(
-    @InjectRepository(User)
-    public repository: Repository<User>,
+    @InjectRepository(Message)
+    public repository: Repository<Message>,
   ) {
     super();
   }
