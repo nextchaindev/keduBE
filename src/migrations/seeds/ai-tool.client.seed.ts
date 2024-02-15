@@ -200,6 +200,7 @@ export class AITools1695633281_202119250848488 implements MigrationInterface {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async down(queryRunner: QueryRunner): Promise<void> {
     // queryRunner.query('DELETE FROM ai_tool');
   }
