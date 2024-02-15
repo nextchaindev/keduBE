@@ -51,7 +51,9 @@ export class CommonAIServices {
     return this;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getApiKey(modelName: string) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async sendMessage(payload: CreateMessageDto): Promise<any> {}
 }

@@ -6,13 +6,13 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
+import { IsPublicEndpoint } from 'src/commons/decorators';
+import { ResponseMessage } from 'src/decorators/response_message.decorator';
+import { ResTransformInterceptor } from 'src/interceptors/response.interceptor';
 
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { IsPublicEndpoint } from 'src/commons/decorators';
-import { ResTransformInterceptor } from 'src/interceptors/response.interceptor';
-import { ResponseMessage } from 'src/decorators/response_message.decorator';
 
 @Controller('/auth')
 @UseInterceptors(ResTransformInterceptor)

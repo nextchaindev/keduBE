@@ -4,12 +4,12 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { user_role } from 'src/commons/role';
 import { UserModel } from 'src/models/user.model';
 
 import { EncryptionsUtil } from '../encryptions/encryptions.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { user_role } from 'src/commons/role';
 
 @Injectable()
 export class AuthService {

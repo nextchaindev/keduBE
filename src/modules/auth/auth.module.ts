@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { ModelsModule } from 'src/models/models.module';
-import { EncryptionsModule } from '../encryptions/encryptions.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ModelsModule } from 'src/models/models.module';
+
+import { EncryptionsModule } from '../encryptions/encryptions.module';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt-auth.strategy';
 
 @Module({
