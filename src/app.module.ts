@@ -15,11 +15,11 @@ import { JwtAuthGuard } from './guards/jwt.guard';
 import { RolesGuard } from './guards/role.guard';
 import { ModelsModule } from './models/models.module';
 import { AiChatModule } from './modules/ai_chat/ai_chat.module';
+import { AiToolListModule } from './modules/ai-tool-list/ai-tool-list.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { EncryptionsModule } from './modules/encryptions/encryptions.module';
-import { AiToolListModule } from './modules/ai-tool-list/ai-tool-list.module';
 
 @Module({
   imports: [
@@ -62,7 +62,12 @@ import { AiToolListModule } from './modules/ai-tool-list/ai-tool-list.module';
         }),
       ],
     }),
-    ThrottlerModule.forRoot({ ttl: 10, limit: 100 }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 10,
+      },
+    ]),
     JoiPipeModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -85,7 +90,6 @@ import { AiToolListModule } from './modules/ai-tool-list/ai-tool-list.module';
       migrationsRun: false,
       cache: process.env.NODE_ENV === 'production',
     }),
-
     ModelsModule,
     CloudinaryModule,
     AuthModule,
