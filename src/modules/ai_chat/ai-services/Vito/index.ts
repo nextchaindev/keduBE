@@ -26,7 +26,6 @@ export class VitoService extends CommonAIServices {
     super(aiChatService);
     this.aiChatService = aiChatService;
 
-    // const apiKey = 'jD6ABnVgbxI3uku9vtoJM8cE1IpuMPqBEx20WvQU';
     this.serviceURL = 'https://openapi.vito.ai/v1';
 
     this.init('Vito');
@@ -34,8 +33,8 @@ export class VitoService extends CommonAIServices {
 
   private async authentication(): Promise<string> {
     const form = new FormData();
-    form.append('client_id', 'GsvVAzmA68D_Tr0epP9J');
-    form.append('client_secret', 'cNfSwuKuI3GNELttiLroywbnlj81U2Is8JQHDpBg');
+    form.append('client_id', this.apiKeyId);
+    form.append('client_secret', this.apiKey);
 
     const response = await axios.post<{
       access_token: string;
@@ -47,7 +46,7 @@ export class VitoService extends CommonAIServices {
     });
 
     const { access_token } = response.data;
-    this.apiKey = access_token;
+    this.organizationKey = access_token;
 
     return access_token;
   }
@@ -55,11 +54,6 @@ export class VitoService extends CommonAIServices {
   private async uploadToAiServer(
     audioFilePath: Buffer,
   ): Promise<VitoUploadResponse> {
-    // const response = await fetch(audioFilePath);
-
-    // const audioData = await response.arrayBuffer();
-    // const audioBlob = new Blob([audioData], { type: 'audio/mp3' });
-
     const requestJson = {
       use_itn: true,
     };
@@ -78,7 +72,7 @@ export class VitoService extends CommonAIServices {
       form,
       {
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.organizationKey}`,
         },
       },
     );
@@ -92,7 +86,7 @@ export class VitoService extends CommonAIServices {
       {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.organizationKey}`,
         },
       },
     );
@@ -101,7 +95,6 @@ export class VitoService extends CommonAIServices {
 
     return status == 'completed' ? response.data : await this.getTranscript(id);
   }
-
   async sendMessage(
     payload: CreateMessageDto,
     attachFile?: Express.Multer.File,

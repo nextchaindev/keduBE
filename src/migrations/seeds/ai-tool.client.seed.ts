@@ -68,7 +68,7 @@ const GROUP_AI_BOT = [
       {
         key: 'Dall-E2',
         name: 'Dall-E2 (OpenAI)',
-        apiKey: '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',
+        apiKey: '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',
         apiKeyId: null,
       },
     ],
@@ -79,13 +79,13 @@ const GROUP_AI_BOT = [
       {
         key: 'GPTTurbo',
         name: 'GPT-3.5 터보',
-        apiKey: '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',
+        apiKey: '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',
         apiKeyId: null,
       },
       {
         key: 'Whisper',
         name: '위스퍼',
-        apiKey: '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',
+        apiKey: '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',
         apiKeyId: null,
       },
     ],
@@ -132,8 +132,8 @@ const GROUP_AI_BOT = [
         key: 'Vito',
         name: '비토',
         en_name: 'Vito',
-        apiKey: 'jD6ABnVgbxI3uku9vtoJM8cE1IpuMPqBEx20WvQU',
-        apiKeyId: null,
+        apiKey: 'cNfSwuKuI3GNELttiLroywbnlj81U2Is8JQHDpBg',
+        apiKeyId: 'GsvVAzmA68D_Tr0epP9J',
       },
     ],
   },
@@ -143,19 +143,19 @@ const GROUP_AI_BOT = [
     children: [
       {
         key: 'Clova',
-        name: 'Clova',
+        name: 'CLOVA 보이스',
         apiKey: 'DncTEdU3tjTxAQFmFodAr3IBPjfzXi3AzdHt2syZ',
         apiKeyId: 'oiahmgxuex',
       },
       {
         key: 'PapagoImageTranslation',
-        name: 'Papago Image Translation',
+        name: '파파고 이미지 번역기',
         apiKey: 'DncTEdU3tjTxAQFmFodAr3IBPjfzXi3AzdHt2syZ',
         apiKeyId: 'oiahmgxuex',
       },
       {
         key: 'PapagoTranslation',
-        name: 'Papago Translation',
+        name: '파파고 번역기',
         apiKey: 'Mk4zdxwwJyJGf2NFalbFBLMZw3gFNNgt0rFloiWI',
         apiKeyId: '4a0hky51cn',
       },
