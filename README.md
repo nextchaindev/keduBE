@@ -70,3 +70,10 @@ yarn prod
 ```
 
 **Note**: Application will start in port = API_PORT
+
+## Configuring AI Services:
+
+You have the ability to modify the name and key of each AI chat bot. However, please **do not alter the key** value as this could lead to errors. After making any changes, **restart the server** to ensure the new settings take effect. There are two methods to make these changes:
+
+1. Modify the seed data file `migrations/seeds/ai-tool.client.seed.ts`. This method is only effective before executing the `yarn migration:seed` command.
+2. Directly alter the `ai_tool` table in the database.
